@@ -7,8 +7,8 @@ data_1 = pd.DataFrame(
 )
 
 data_2 = pd.DataFrame(
-    [[15, 21], [41, 11]],
-    columns=["Rank", "Subjects"]
+    [['Colombia', 'Colombiana'], ['Venezuela', 'Venezolana']],
+    columns=["Pais", "Nacionalidad"]
 )
 
 print(data_1)

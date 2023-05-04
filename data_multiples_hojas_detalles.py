@@ -1,9 +1,9 @@
-
 import pandas as pd
 import mysql.connector
 import openpyxl
 
 
+# Funcion para establecer conexión con BD MySQL y Python
 def connectionBD():
     try:
         connection = mysql.connector.connect(
@@ -20,77 +20,74 @@ def connectionBD():
         print(f"No se pudo conectar: {error}")
 
 
-def listaPersonas():
+# Función que genera la 2 hoja del Excel para la tabla de Usuarios
+def listaPersonasBD():
     try:
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as mycursor:
                 querySQL = "SELECT * FROM personas"
                 mycursor.execute(querySQL)
-                resumen_personas = mycursor.fetchall()
-                return resumen_personas
+                lista_personas = mycursor.fetchall()
+                return lista_personas
     except Exception as e:
         print(f"Ocurrió un error leyendo las personas: {e}")
         return {}
 
 
-def listaUsuarios():
+# Función que genera la 2 hoja del Excel para la tabla de Registros
+def listaRegistrosUsuarios():
     try:
         with connectionBD() as conexion_MySQLdb:
             with conexion_MySQLdb.cursor(dictionary=True) as mycursor:
                 querySQL = "SELECT * FROM registros"
                 mycursor.execute(querySQL)
-                resumen_usuarios = mycursor.fetchall()
-                return resumen_usuarios
+                return mycursor.fetchall()
     except Exception as e:
-        print(f"Ocurrió un error leyendo los usuarios: {e}")
+        print(f"Ocurrió un error {e}")
         return {}
 
 
-def hojaUsuarios(lista_usuarios, wb):
+# Función para crear la Hoja de Registros Usuarios
+def hojaRegistrosUsuarios(lista_registros_usuarios, wb):
     # Crea una hoja de Excel para los usuarios
-    hoja = wb.create_sheet(title="Usuarios")
+    hoja = wb.create_sheet(title="Registros Usuarios")
     # Crea la fila del encabezado con los títulos
-    hoja.append(('id', 'nombre', 'profesion', 'status'))
-    for usuario in lista_usuarios:
+    hoja.append(('Id', 'Nombre', 'Profesion', 'Estatus'))
+    for registro in lista_registros_usuarios:
         # Agrega una tupla con los valores del usuario
-        hoja.append((usuario['id'], usuario['nombre'],
-                    usuario['profesion'], usuario['status']))
+        hoja.append((registro['id'], registro['nombre'],
+                    registro['profesion'], registro['status']))
 
 
+# Función para generar la hoja de Personas
 def hojaPersonas(lista_personas, wb):
     # Crea una hoja de Excel para las personas
     hoja = wb.create_sheet(title="Personas")
     # Crea la fila del encabezado con los títulos
-    hoja.append(('id', 'Nombre', 'Sexo', 'email'))
+    hoja.append(('Id', 'Nombre', 'Sexo', 'Email'))
     for persona in lista_personas:
         # Agrega una tupla con los valores de la persona
         hoja.append((persona['id_persona'], persona['nombre'],
                     persona['sexo'], persona['email']))
 
 
+# Funcion para consolidad ambas consultar y generar el Excel
 def resumenData():
     try:
-        with connectionBD() as conexion_MySQLdb:
-            with conexion_MySQLdb.cursor(dictionary=True) as mycursor:
-                querySQL = "SELECT * FROM personas"
-                mycursor.execute(querySQL)
-                resumen_personas = mycursor.fetchall()
+        # Crea un archivo Excel
+        wb = openpyxl.Workbook()
 
-                # Crea un archivo Excel
-                wb = openpyxl.Workbook()
+        # Elimina la hoja en blanco llamada "Sheet"
+        wb.remove(wb.active)
 
-                # Elimina la hoja en blanco llamada "Sheet"
-                wb.remove(wb.active)
+        # Crea una hoja de Excel para las personas
+        hojaPersonas(listaPersonasBD(), wb)
 
-                # Crea una hoja de Excel para las personas
-                hojaPersonas(resumen_personas, wb)
+        # Crea una hoja de Excel para los usuarios
+        hojaRegistrosUsuarios(listaRegistrosUsuarios(), wb)
 
-                # Crea una hoja de Excel para los usuarios
-                resumen_usuarios = listaUsuarios()
-                hojaUsuarios(resumen_usuarios, wb)
-
-                # Guarda el archivo Excel
-                wb.save('resumenData.xlsx')
+        # Guarda el archivo Excel
+        wb.save('resumenData_3.xlsx')
 
     except Exception as e:
         print(f"Ocurrió un error leyendo las consignaciones: {e}")
