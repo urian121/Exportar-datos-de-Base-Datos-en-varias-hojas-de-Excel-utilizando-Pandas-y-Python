@@ -1,9 +1,0 @@
-# Cómo escribir mis data en varias Hojas de Excel usando Pandas y Python
-# Cómo escribir datos de mi Base de Datos en múltiples hojas de Excel utilizando Pandas y Python
-# Exportar datos de una base de datos en varias hojas de Excel utilizando Pandas y Python
-# Cómo exportar información de una base de datos MySQL a múltiples hojas de Excel utilizando Pandas y Python
-# color: #f4ad03; parecido a mostaza
-# How to Write Pandas DataFrames to Multiple Excel Sheets
-# Uso de Python Pandas con hoja de Excel
-
-Exportar-datos-de-Base-Datos-en-varias-hojas-de-Excel-utilizando-Pandas-y-Python
